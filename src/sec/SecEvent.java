@@ -15,11 +15,28 @@ public class SecEvent {
 
             String line;
             while((line = br.readLine()) != null) {
-                String[] part = line.split(":");
-                if (part.length == 2) {
-                    String variable = part[0].trim();
-                    String value = part[1].trim();
-                    BufferVariable.put(variable, value);
+                if (line.contains("=")) {
+                    String[] part = line.split("=");
+                    if (part.length == 2) {
+                        String variable = part[0].trim();
+                        String value = part[1].trim();
+                        if (value.startsWith("\"") && value.endsWith("\"")) {
+                            BufferVariable.put(variable, value.substring(1, value.length() -1));
+                        } else {
+                            BufferVariable.put(variable, value);
+                        }
+                    }
+                } else {
+                    String[] part = line.split(":");
+                    if (part.length == 2) {
+                        String variable = part[0].trim();
+                        String value = part[1].trim();
+                        if (value.startsWith("\"") && value.endsWith("\"")) {
+                            BufferVariable.put(variable, value.substring(1, value.length() -1));
+                        } else {
+                            BufferVariable.put(variable, value);
+                        }
+                    }
                 }
             }
 
@@ -32,5 +49,8 @@ public class SecEvent {
 
     public static String get(String secName) {
         return BufferVariable.get(secName);
+    }
+    public static int getInt(String secName) {
+        return Integer.parseInt(BufferVariable.get(secName));
     }
 }

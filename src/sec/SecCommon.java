@@ -1,9 +1,9 @@
 package sec;
 
 public class SecCommon {
-    public static String getPath(String path) {
+    public static String getPath() {
         ClassLoader classLoader = SecCommon.class.getClassLoader();
-        String relativePath = classLoader.getResource(path).getPath();
+        String relativePath = classLoader.getResource(".sec").getPath();
         return relativePath;
     }
 }
