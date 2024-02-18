@@ -15,7 +15,7 @@ public class SecEvent {
 
             String line;
             while((line = br.readLine()) != null) {
-                String[] part = line.split("=");
+                String[] part = line.split(":");
                 if (part.length == 2) {
                     String variable = part[0].trim();
                     String value = part[1].trim();
