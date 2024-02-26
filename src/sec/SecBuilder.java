@@ -12,6 +12,7 @@ public class SecBuilder {
     private static boolean isNotFinding = false;
     private static String findSec;
     private static String path;
+
     private SecBuilder(String path) throws IOException {
         SecBuilder.path = path;
         BufferedReader reader = new BufferedReader(new FileReader(path));
@@ -24,6 +25,7 @@ public class SecBuilder {
             SecVariable.put(variable, value);
         }
     }
+
     private String readLine(BufferedReader reader) throws IOException {
         String line;
         while ((line = reader.readLine()) != null) {
@@ -35,6 +37,7 @@ public class SecBuilder {
         System.err.println("Error to read .sec in line " + line);
         return null;
     }
+
     public static void load() throws IOException {
         if (!isLoaded) {
             isLoaded = true;
@@ -43,9 +46,11 @@ public class SecBuilder {
             throw new IllegalStateException("SecBuilder is already loaded");
         }
     }
+
     private static boolean isAlreadyLoaded() {
         return isLoaded;
     }
+
     private static boolean isNotFinding() throws IOException {
         if (isNotFinding) {
             BufferedReader reader = new BufferedReader(new FileReader(path));
@@ -69,6 +74,7 @@ public class SecBuilder {
         }
         throw new IllegalStateException("Error to read " + findSec + " because is not exist");
     }
+
     public static Object get(String secName) throws IOException {
         if (isLoaded) {
             if (SecVariable.get(secName) != null) {
