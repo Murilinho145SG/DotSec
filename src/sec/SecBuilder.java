@@ -33,8 +33,6 @@ public class SecBuilder {
                 return line;
             }
         }
-        System.exit(1);
-        System.err.println("Error to read .sec in line " + line);
         return null;
     }
 
