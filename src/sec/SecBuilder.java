@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class SecBuilder {
     private static boolean isLoaded = false;
-    private static final Map<String, String> SecVariable = new HashMap();
+    private static final Map<String, String> SecVariable = new HashMap<>();
     private static boolean isNotFinding = false;
     private static String findSec;
     private static String path;
@@ -36,8 +36,12 @@ public class SecBuilder {
         return null;
     }
     public static void load() throws IOException {
-        isLoaded = true;
-        new SecBuilder(SecCommon.getPath());
+        if (!isLoaded) {
+            isLoaded = true;
+            new SecBuilder(SecCommon.getPath());
+        } else {
+            throw new IllegalStateException("SecBuilder is already loaded");
+        }
     }
     private static boolean isAlreadyLoaded() {
         return isLoaded;
@@ -58,9 +62,12 @@ public class SecBuilder {
                         return true;
                     }
                 }
+                if (SecVariable.get(findSec) == null) {
+                    throw new IllegalStateException("Error to read " + findSec + " because is not exist");
+                }
             }
         }
-        return false;
+        throw new IllegalStateException("Error to read " + findSec + " because is not exist");
     }
     public static Object get(String secName) throws IOException {
         if (isLoaded) {
@@ -82,10 +89,8 @@ public class SecBuilder {
                 }
             }
         } else {
-            System.out.println("Error to read .sec file because Sec is not Loaded");
-            return null;
+            throw new IllegalStateException("Error to read .sec file because Sec is not Loaded");
         }
-        System.out.println("Error to get " + secName + " Value");
-        return null;
+        throw new IllegalStateException("Error to get " + secName + " Value");
     }
 }
