@@ -1,5 +1,3 @@
-package sec;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -12,6 +10,7 @@ public class SecBuilder {
     private static boolean isNotFinding = false;
     private static String findSec;
     private static String path;
+    private static boolean isDiferentDir = false;
 
     private SecBuilder(String path) throws IOException {
         SecBuilder.path = path;
@@ -26,6 +25,20 @@ public class SecBuilder {
         }
     }
 
+    public static SecBuilder dir(String path) {
+        SecBuilder.path = path;
+        isDiferentDir = true;
+        try {
+            if (!isLoaded) {
+                isLoaded = true;
+                return new SecBuilder(path);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        throw new IllegalStateException("SecBuilder is already loaded");
+    }
+
     private String readLine(BufferedReader reader) throws IOException {
         String line;
         while ((line = reader.readLine()) != null) {
@@ -36,13 +49,14 @@ public class SecBuilder {
         return null;
     }
 
-    public static void load() throws IOException {
-        if (!isLoaded) {
+    public static SecBuilder load() throws IOException {
+        if (!isLoaded && !isDiferentDir) {
             isLoaded = true;
             new SecBuilder(SecCommon.getPath());
         } else {
             throw new IllegalStateException("SecBuilder is already loaded");
         }
+        return null;
     }
 
     private static boolean isAlreadyLoaded() {
@@ -73,28 +87,28 @@ public class SecBuilder {
         throw new IllegalStateException("Error to read " + findSec + " because is not exist");
     }
 
-    public static Object get(String secName) throws IOException {
+    public static String get(String secName) throws IOException {
         if (isLoaded) {
             if (SecVariable.get(secName) != null) {
-                try {
-                    return Integer.parseInt(SecVariable.get(secName));
-                } catch (NumberFormatException e) {
-                    return SecVariable.get(secName);
-                }
+                return SecVariable.get(secName);
             } else {
                 isNotFinding = true;
                 findSec = secName;
             }
             if (isNotFinding()) {
-                try {
-                    return Integer.parseInt(SecVariable.get(secName));
-                } catch (NumberFormatException e) {
-                    return SecVariable.get(secName);
-                }
+                return SecVariable.get(secName);
             }
         } else {
             throw new IllegalStateException("Error to read .sec file because Sec is not Loaded");
         }
         throw new IllegalStateException("Error to get " + secName + " Value");
+    }
+
+    public static int getInt(String secName) {
+        try {
+            return Integer.parseInt(SecBuilder.get(secName));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
